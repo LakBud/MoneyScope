@@ -5,14 +5,12 @@ import type { TransactionProps } from "../types/types";
 
 type TransactionFormData = TransactionProps & {
   recurrence?: "daily" | "weekly" | "monthly" | "yearly";
-  budget?: string;
 };
 
 type TransactionFormProps = {
   onClose: () => void;
   onSave: (transaction: TransactionFormData) => void;
   defaultValues?: TransactionFormData;
-  availableBudgets?: string[];
 };
 
 const TransactionForm = ({ onClose, onSave, defaultValues }: TransactionFormProps) => {
@@ -32,7 +30,6 @@ const TransactionForm = ({ onClose, onSave, defaultValues }: TransactionFormProp
       value: 0,
       date: new Date().toISOString(),
       recurrence: undefined,
-      budget: "",
     },
   });
 

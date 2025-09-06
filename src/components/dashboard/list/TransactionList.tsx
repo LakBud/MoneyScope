@@ -23,8 +23,6 @@ const TransactionList = ({ transactions, linkToPage = "/transactions" }: Transac
     <div className="w-full grid gap-4 auto-rows-fr" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
       <AnimatePresence>
         {transactions.map((t, i) => {
-          const progressPercent = t.budgetTotal && t.budgetTotal > 0 ? Math.min(100, (t.value / t.budgetTotal) * 100) : 0;
-
           return (
             <Link key={t.id} to={`${linkToPage}/${t.id}`}>
               <motion.div
@@ -56,22 +54,11 @@ const TransactionList = ({ transactions, linkToPage = "/transactions" }: Transac
                   </div>
                 </div>
 
-                {/* Middle: Budget + Recurrence + Progress */}
+                {/* Recurrence */}
                 <div className="flex flex-col gap-1 mb-2">
                   <div className="flex justify-between items-center text-sm md:text-base text-indigo-700/80">
-                    {t.budget && <span className="px-2 py-0.5 bg-indigo-100 rounded-xl">{t.budget}</span>}
                     {t.recurrence && <span className="px-2 py-0.5 bg-indigo-100 rounded-xl capitalize">{t.recurrence}</span>}
                   </div>
-                  {t.budget && t.budgetTotal && (
-                    <div className="h-2 w-full bg-indigo-100 rounded-full overflow-hidden mt-1">
-                      <motion.div
-                        className="h-full bg-indigo-500 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progressPercent}%` }}
-                        transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
-                      />
-                    </div>
-                  )}
                 </div>
 
                 {/* Bottom: Value */}

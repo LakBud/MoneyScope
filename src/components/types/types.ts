@@ -6,7 +6,5 @@ export type TransactionProps = {
   color: string;
   value: number;
   date: string;
-  budget?: string;
   recurrence?: "daily" | "weekly" | "monthly" | "yearly";
-  budgetTotal?: number;
 };
