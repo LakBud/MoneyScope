@@ -201,13 +201,12 @@ const Charts = ({ transactions }: ChartsProps) => {
       <div className="flex flex-wrap justify-end gap-2 md:gap-3 mb-3">
         {[
           { key: "line", label: "Balance" },
-          { key: "rollingAverage", label: "Rolling Avg" },
+          { key: "rollingAverage", label: "Rolling Average" },
           { key: "bar", label: "Category Total" },
           { key: "pie", label: "Category Share" },
           { key: "doughnut", label: "Category Doughnut" },
           { key: "incomeExpense", label: "Income vs Expense" },
           { key: "top5", label: "Top 5" },
-          { key: "budgetTotals", label: "Budget Totals" },
         ].map((chart) => (
           <button
             key={chart.key}
