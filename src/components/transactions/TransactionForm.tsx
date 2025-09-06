@@ -62,7 +62,8 @@ const TransactionForm = ({
 
   return (
     <motion.div
-      className="bg-white/95 border border-indigo-200 shadow-2xl rounded-3xl p-6 sm:p-8 max-w-lg mx-auto relative"
+      className="bg-white/95 border border-indigo-200 shadow-2xl rounded-3xl p-6 sm:p-8 max-w-lg w-full mx-auto relative
+               max-h-[90vh] overflow-y-auto"
       variants={formVariant}
       initial="hidden"
       animate="visible"
