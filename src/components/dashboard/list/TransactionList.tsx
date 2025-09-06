@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 type TransactionListProps = {
   transactions: TransactionProps[];
-  linkToPage?: string; // optional, default to "/transactions"
+  linkToPage?: string;
 };
 
 const TransactionList = ({ transactions, linkToPage = "/transactions" }: TransactionListProps) => {

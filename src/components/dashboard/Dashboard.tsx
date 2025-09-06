@@ -11,6 +11,7 @@ import {
   FiDollarSign,
   FiCreditCard,
   FiFilter,
+  FiInfo,
 } from "react-icons/fi";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import TransactionListFilters from "./list/TransactionListFilters";
@@ -56,7 +57,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-blue-50 to-blue-100 flex flex-col">
-      <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-10 py-6 md:py-8 flex flex-col lg:flex-row gap-6 md:gap-8">
+      <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-10 py-6 md:py-8 flex flex-col lg:flex-row gap-6 md:gap-8 z-2">
         {/* Left Column */}
         <div className="flex-1 flex flex-col gap-6">
           {/* Summary Cards */}
@@ -84,7 +85,7 @@ const Dashboard = () => {
                   animate="visible"
                   whileHover={{ scale: 1.06, boxShadow: "0 15px 35px rgba(0,0,0,0.25)" }}
                   whileTap={{ scale: 0.97 }}
-                  className={`bg-gradient-to-br ${card.gradient} rounded-3xl shadow-lg px-6 py-5 flex flex-col items-center justify-center cursor-pointer`}
+                  className={`bg-gradient-to-br ${card.gradient} rounded-3xl shadow-lg px-6 py-5 flex flex-col items-center justify-center `}
                 >
                   <card.icon className="w-7 h-7 text-white mb-1" />
                   <span className="text-white font-semibold text-sm md:text-base">{card.label}</span>
@@ -114,6 +115,21 @@ const Dashboard = () => {
             <div className="w-full flex-1 flex items-center justify-center min-h-[24rem] md:min-h-[32rem] lg:min-h-[36rem]">
               {transactions.length === 0 ? (
                 <p className="text-blue-700/80 italic text-center px-4 animate-fade-in">
+                  <AnimatePresence>
+                    {filteredTransactions.length === 0 ? (
+                      <motion.div
+                        className="flex flex-col items-center justify-center text-center mt-4 text-indigo-800/70"
+                        variants={transactionItemVariant}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        <FiInfo className="w-12 h-12 text-indigo-500 mb-4 animate-pulse" />
+                      </motion.div>
+                    ) : (
+                      <TransactionList transactions={filteredTransactions} linkToPage="/transactions" />
+                    )}
+                  </AnimatePresence>
                   No transactions yet. Add some transactions to see the chart update in real-time!
                 </p>
               ) : (
@@ -138,7 +154,7 @@ const Dashboard = () => {
 
             <motion.button
               onClick={() => setIsFiltersOpen((prev) => !prev)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition flex items-center gap-2"
+              className="bg-indigo-200 text-indigo-800 py-2 px-4 rounded-2xl flex items-center gap-2 hover:bg-indigo-300 hover:text-indigo-900 transition-shadow shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-800 hover:cursor-pointer"
               whileHover={{ scale: 1.05 }}
             >
               <FiFilter />
@@ -157,15 +173,14 @@ const Dashboard = () => {
           {/* Add Button */}
           <motion.button
             onClick={() => setShowForm(true)}
-            className="w-full px-4 py-2 bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 text-white rounded-xl shadow flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200"
-            whileHover={{ scale: 1.04, boxShadow: "0 12px 28px rgba(0,0,0,0.25)" }}
-            whileTap={{ scale: 0.97 }}
+            className="w-full px-4 py-2 bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 text-white rounded-xl shadow flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200 hover:cursor-pointer"
+            whileHover={{ scale: 1.04, boxShadow: "0 8px 8px rgba(0,0,0,0.25)" }}
+            whileTap={{ scale: 0.4 }}
           >
             <FiBarChart className="w-5 h-5" />
             Add
           </motion.button>
 
-          {/* Transaction List Section with Links */}
           {/* Transaction List Section */}
           <motion.div
             className="flex-1 overflow-y-auto mt-3 border border-indigo-300/30 rounded-2xl p-3 md:p-4 backdrop-blur-md shadow-inner scrollbar-thin scrollbar-thumb-indigo-400/60 scrollbar-track-indigo-50/30 flex flex-col gap-3"
@@ -175,15 +190,18 @@ const Dashboard = () => {
           >
             <AnimatePresence>
               {filteredTransactions.length === 0 ? (
-                <motion.p
-                  className="text-indigo-800/70 italic text-center mt-4"
+                <motion.div
+                  className="flex flex-col items-center justify-center text-center mt-4 text-indigo-800/70"
                   variants={transactionItemVariant}
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
                 >
-                  No transactions match the filter. Click <span className="font-bold">Add</span> to create one!
-                </motion.p>
+                  <FiInfo className="w-12 h-12 text-indigo-500 mb-4 animate-pulse" />
+                  <p className="italic">
+                    No transactions match the filter. Click <span className="font-bold">Add</span> to create one!
+                  </p>
+                </motion.div>
               ) : (
                 <TransactionList transactions={filteredTransactions} linkToPage="/transactions" />
               )}

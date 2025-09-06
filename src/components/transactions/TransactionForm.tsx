@@ -15,12 +15,7 @@ type TransactionFormProps = {
   availableBudgets?: string[];
 };
 
-const TransactionForm = ({
-  onClose,
-  onSave,
-  defaultValues,
-  availableBudgets = ["Food", "Transport", "Income", "Shopping", "Work", "Personal", "Other"],
-}: TransactionFormProps) => {
+const TransactionForm = ({ onClose, onSave, defaultValues }: TransactionFormProps) => {
   const {
     register,
     handleSubmit,
@@ -80,6 +75,7 @@ const TransactionForm = ({
         <X size={28} />
       </button>
 
+      {/* Header */}
       <header className="mb-6 text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900">
           {defaultValues ? "Edit Transaction" : "Add Transaction"}
@@ -89,119 +85,152 @@ const TransactionForm = ({
         </p>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Title */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Title</label>
-          <motion.input
-            type="text"
-            {...register("title", { required: "Title is required" })}
-            placeholder="Grocery shopping"
-            className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900 placeholder-indigo-400 shadow-sm transition duration-200"
-            whileFocus={{ scale: 1.01 }}
-          />
-          {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
-        </div>
+      {/* Step Indicator */}
+      <div className="flex items-center justify-center mb-8">
+        {["Details", "Appearance", "Value"].map((step, idx, arr) => (
+          <div key={step} className="flex items-center">
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-semibold shadow-sm">
+                {idx + 1}
+              </div>
+              <span className="mt-1 text-xs font-medium text-indigo-700">{step}</span>
+            </div>
+            {idx < arr.length - 1 && <div className="w-10 sm:w-16 h-0.5 bg-indigo-200 mx-2" />}
+          </div>
+        ))}
+      </div>
 
-        {/* Category */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Category</label>
-          <motion.input
-            type="text"
-            {...register("category", { required: "Category is required" })}
-            placeholder="Food"
-            className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900 placeholder-indigo-400 shadow-sm transition duration-200"
-            whileFocus={{ scale: 1.01 }}
-          />
-          {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>}
-        </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        {/* Section: Details */}
+        <div className="space-y-6">
+          <h3 className="text-indigo-800 font-semibold text-lg">Details</h3>
 
-        {/* Budget */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Budget</label>
-          <select
-            {...register("budget")}
-            className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900 shadow-sm transition duration-200"
-          >
-            <option value="">Select Budget</option>
-            {availableBudgets.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Recurrence */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Recurrence</label>
-          <select
-            {...register("recurrence")}
-            className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900 shadow-sm transition duration-200"
-          >
-            <option value="">None</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-          </select>
-        </div>
-
-        {/* Emoji */}
-        <div className="text-center">
-          <label className="block text-indigo-900 font-semibold mb-1">Logo</label>
-          <motion.div
-            className={`w-full flex items-center justify-center rounded-xl px-4 py-3 text-3xl font-bold shadow-sm border ${
-              emojiValue && emojiPattern.test(emojiValue)
-                ? "bg-indigo-50 border-indigo-300 text-indigo-900"
-                : "bg-red-50 border-red-200 text-red-600"
-            }`}
-          >
-            <input
+          {/* Title */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">Title</label>
+            <motion.input
               type="text"
-              {...register("emoji", {
-                required: "Logo is required",
-                validate: (value) =>
-                  typeof value === "string" && emojiPattern.test(value) ? true : "Please enter a valid emoji",
-              })}
-              placeholder="⚙️"
-              className="w-full text-center bg-transparent focus:outline-none placeholder-indigo-300 text-2xl"
-              maxLength={2}
+              {...register("title", { required: "Title is required" })}
+              placeholder="Grocery shopping"
+              className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5
+                       focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900
+                       placeholder-indigo-400 shadow-lg transition"
+              whileFocus={{ scale: 1.01 }}
             />
-          </motion.div>
-          {errors.emoji && <p className="text-red-500 text-xs mt-1">{errors.emoji.message}</p>}
+            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">Category</label>
+            <motion.input
+              type="text"
+              {...register("category", { required: "Category is required" })}
+              placeholder="Food"
+              className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5
+                       focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900
+                       placeholder-indigo-400 shadow-lg transition"
+              whileFocus={{ scale: 1.01 }}
+            />
+            {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>}
+          </div>
+
+          {/* Recurrence */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">
+              Recurrence <span className="text-indigo-400">(Optional)</span>
+            </label>
+            <select
+              {...register("recurrence")}
+              className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5
+                       focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900
+                       shadow-lg transition"
+            >
+              <option value="">None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
         </div>
 
-        {/* Color */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Color</label>
-          <motion.input
-            type="color"
-            {...register("color")}
-            className="w-16 h-10 border border-indigo-200 rounded-xl cursor-pointer shadow-sm transition duration-200"
-            whileHover={{ scale: 1.05 }}
-          />
+        {/* Section: Appearance */}
+        <div className="space-y-6">
+          <h3 className="text-indigo-800 font-semibold text-lg">Appearance</h3>
+
+          {/* Emoji */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">
+              Logo <span className="text-indigo-400">(Optional)</span>
+            </label>
+            <motion.div
+              className={`w-full flex items-center justify-center rounded-xl px-4 py-3 text-3xl font-bold
+              shadow-lg border transition
+              ${
+                !emojiValue
+                  ? "bg-white border-indigo-200 text-indigo-400" // Neutral (empty)
+                  : emojiPattern.test(emojiValue)
+                  ? "bg-indigo-50 border-indigo-300 text-indigo-900" // Valid emoji
+                  : "bg-red-50 border-red-200 text-red-600" // Invalid emoji
+              }`}
+            >
+              <input
+                type="text"
+                {...register("emoji", {
+                  validate: (value) => !value || emojiPattern.test(value) || "Please enter a valid emoji",
+                })}
+                placeholder="e.g  🛒"
+                className="w-full text-center bg-transparent focus:outline-none placeholder-indigo-300 text-2xl"
+                maxLength={2}
+              />
+            </motion.div>
+          </div>
+
+          {/* Color */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">
+              Color <span className="text-indigo-400">(Optional)</span>
+            </label>
+            <motion.input
+              type="color"
+              {...register("color")}
+              className="w-16 h-10 border border-indigo-200 rounded-xl cursor-pointer shadow-md transition duration-200"
+              whileHover={{ scale: 1.05 }}
+            />
+          </div>
         </div>
 
-        {/* Value */}
-        <div>
-          <label className="block text-indigo-900 font-semibold mb-1">Value Amount</label>
-          <motion.input
-            type="number"
-            step="0.01"
-            placeholder="45.99"
-            {...register("value", { required: "Value is required", valueAsNumber: true })}
-            className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900 placeholder-indigo-400 shadow-sm transition duration-200"
-            whileFocus={{ scale: 1.01 }}
-          />
-          {errors.value && <p className="text-red-500 text-xs mt-1">{errors.value.message}</p>}
+        {/* Section: Value */}
+        <div className="space-y-6">
+          <h3 className="text-indigo-800 font-semibold text-lg">Value</h3>
+
+          {/* Value */}
+          <div>
+            <label className="block text-indigo-900 font-semibold mb-1">Value Amount</label>
+            <motion.input
+              type="number"
+              step="0.01"
+              placeholder="45.99"
+              {...register("value", { required: "Value is required", valueAsNumber: true })}
+              className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-2.5
+                       focus:ring-2 focus:ring-indigo-400 focus:outline-none text-indigo-900
+                       placeholder-indigo-400 shadow-lg transition"
+              whileFocus={{ scale: 1.01 }}
+            />
+            {errors.value && <p className="text-red-500 text-xs mt-1">{errors.value.message}</p>}
+          </div>
         </div>
 
         {/* Submit */}
         <motion.div className="pt-4">
           <motion.button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition-transform duration-200 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-800
+                     text-white py-3 rounded-xl font-semibold shadow-lg
+                     hover:shadow-indigo-500/30 transition-transform duration-200
+                     hover:scale-105 hover:cursor-pointer"
             whileTap={{ scale: 0.97 }}
           >
             {defaultValues ? "Update Transaction" : "Save Transaction"}

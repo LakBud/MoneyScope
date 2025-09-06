@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiPlus, FiFilter, FiEdit } from "react-icons/fi";
+import { FiPlus, FiFilter, FiEdit, FiBarChart, FiInfo } from "react-icons/fi";
 import TransactionForm from "./TransactionForm";
 import TransactionList from "../dashboard/list/TransactionList";
 import TransactionListFilters from "../dashboard/list/TransactionListFilters";
@@ -36,7 +36,7 @@ const TransactionListPage = () => {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="bg-indigo-200 text-indigo-800 py-2 px-4 rounded-2xl flex items-center gap-2 hover:bg-indigo-300 hover:text-indigo-900 transition-shadow shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="bg-indigo-200 text-indigo-800 py-2 px-4 rounded-2xl flex items-center gap-2 hover:bg-indigo-300 hover:text-indigo-900 transition-shadow shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-800 hover:cursor-pointer z-2 transform duration-300 hover:scale-105"
           >
             <FiFilter /> Filters
           </button>
@@ -45,9 +45,10 @@ const TransactionListPage = () => {
               setEditingTransaction(null);
               setShowForm(true);
             }}
-            className="bg-indigo-600 text-white py-2 px-4 rounded-2xl flex items-center gap-2 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 text-white py-2 px-4 rounded-2xl flex items-center gap-2 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 hover:cursor-pointer z-2 transform duration-300 hover:scale-105"
           >
-            <FiPlus /> New Transaction
+            <FiBarChart className="w-5 h-5" />
+            Add
           </button>
         </div>
       </div>
@@ -63,35 +64,49 @@ const TransactionListPage = () => {
       {/* Transaction list with animated filtering */}
       <div className="mt-6 grid gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence>
-          {displayedTransactions.map((t) => (
+          {displayedTransactions.length === 0 ? (
             <motion.div
-              key={t.id}
-              layout
+              className="col-span-full flex flex-col items-center justify-center p-8 bg-white/80 rounded-3xl shadow-inner border border-indigo-200/40"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className={`relative rounded-3xl p-5 shadow-lg flex flex-col justify-between transition-colors duration-300
+            >
+              <FiInfo className="w-12 h-12 text-indigo-500 mb-4 animate-pulse" />
+              <p className="text-indigo-800/70 italic text-center text-lg">
+                No transactions found. Click <span className="font-bold">Add</span> to create one!
+              </p>
+            </motion.div>
+          ) : (
+            displayedTransactions.map((t) => (
+              <motion.div
+                key={t.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className={`relative rounded-3xl p-5 shadow-lg flex flex-col justify-between transition-colors duration-300 z-2
                 ${
                   t.value >= 0
                     ? "bg-green-50 border-l-4 border-green-400 hover:bg-green-100"
                     : "bg-red-50 border-l-4 border-red-400 hover:bg-red-100"
                 }`}
-            >
-              <TransactionList transactions={[t]} linkToPage="/transactions" />
-
-              {/* Edit button */}
-              <button
-                onClick={() => {
-                  setEditingTransaction(t);
-                  setShowForm(true);
-                }}
-                className="absolute top-3 right-3 bg-indigo-600 text-white p-2 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg transition flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                aria-label={`Edit transaction ${t.title}`}
               >
-                <FiEdit />
-              </button>
-            </motion.div>
-          ))}
+                <TransactionList transactions={[t]} linkToPage="/transactions" />
+
+                {/* Edit button */}
+                <button
+                  onClick={() => {
+                    setEditingTransaction(t);
+                    setShowForm(true);
+                  }}
+                  className="absolute top-3 right-3 bg-indigo-600 text-white p-2 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg transition flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  aria-label={`Edit transaction ${t.title}`}
+                >
+                  <FiEdit />
+                </button>
+              </motion.div>
+            ))
+          )}
         </AnimatePresence>
       </div>
 

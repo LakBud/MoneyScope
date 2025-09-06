@@ -47,7 +47,6 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
   }, [search, category, budget, recurrence, minValue, maxValue, transactions, setFilteredTransactions]);
 
   const categories = Array.from(new Set(transactions.map((t) => t.category)));
-  const budgets = Array.from(new Set(transactions.map((t) => t.budget ?? "").filter(Boolean)));
   const recurrences = Array.from(new Set(transactions.map((t) => t.recurrence ?? "").filter(Boolean)));
 
   const panelVariants = {
@@ -64,27 +63,29 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="bg-indigo-50 p-5 rounded-2xl shadow-lg flex flex-col gap-4 md:gap-3 w-full z-50 relative"
+          className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl flex flex-col gap-6 w-full z-50 relative border border-indigo-100"
         >
-          {/* Search + Category + Budget */}
-          <div className="flex flex-col md:flex-row md:gap-3 gap-3">
+          {/* Search + Filters Row */}
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search */}
             <div className="flex-1 relative">
-              <FiSearch className="absolute top-3 left-3 text-indigo-400" />
+              <FiSearch className="absolute top-3.5 left-3.5 text-indigo-400" />
               <input
                 type="text"
-                placeholder="Search title..."
+                placeholder="Search by title..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+                className="pl-10 pr-3 py-3 w-full border border-indigo-200 rounded-2xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               />
             </div>
 
+            {/* Category */}
             <div className="flex-1 relative">
-              <FiTag className="absolute top-3 left-3 text-indigo-400" />
+              <FiTag className="absolute top-3.5 left-3.5 text-indigo-400" />
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+                className="pl-10 pr-3 py-3 w-full border border-indigo-200 rounded-2xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               >
                 <option value="all">All Categories</option>
                 {categories.map((cat) => (
@@ -95,28 +96,13 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
               </select>
             </div>
 
+            {/* Recurrence */}
             <div className="flex-1 relative">
-              <FiTag className="absolute top-3 left-3 text-indigo-400" />
-              <select
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
-              >
-                <option value="all">All Budgets</option>
-                {budgets.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex-1 relative">
-              <FiTag className="absolute top-3 left-3 text-indigo-400" />
+              <FiTag className="absolute top-3.5 left-3.5 text-indigo-400" />
               <select
                 value={recurrence}
                 onChange={(e) => setRecurrence(e.target.value)}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+                className="pl-10 pr-3 py-3 w-full border border-indigo-200 rounded-2xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               >
                 <option value="all">All Recurrences</option>
                 {recurrences.map((r) => (
@@ -129,33 +115,36 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
           </div>
 
           {/* Min + Max Value */}
-          <div className="flex flex-col md:flex-row md:gap-3 gap-3">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
-              <FiDollarSign className="absolute top-3 left-3 text-indigo-400" />
+              <FiDollarSign className="absolute top-3.5 left-3.5 text-indigo-400" />
               <input
                 type="number"
                 placeholder="Min value"
                 value={minValue}
                 onChange={(e) => setMinValue(e.target.value === "" ? "" : Number(e.target.value))}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+                className="pl-10 pr-3 py-3 w-full border border-indigo-200 rounded-2xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               />
             </div>
 
             <div className="flex-1 relative">
-              <FiDollarSign className="absolute top-3 left-3 text-indigo-400" />
+              <FiDollarSign className="absolute top-3.5 left-3.5 text-indigo-400" />
               <input
                 type="number"
                 placeholder="Max value"
                 value={maxValue}
                 onChange={(e) => setMaxValue(e.target.value === "" ? "" : Number(e.target.value))}
-                className="pl-10 pr-3 py-3 w-full border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500"
+                className="pl-10 pr-3 py-3 w-full border border-indigo-200 rounded-2xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               />
             </div>
           </div>
 
+          {/* Reset Button */}
           <motion.button
             onClick={handleReset}
-            className="w-full px-5 py-3 bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 via-indigo-700 to-indigo-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-indigo-500/30 transition-all hover:cursor-pointer"
           >
             Reset Filters
           </motion.button>
