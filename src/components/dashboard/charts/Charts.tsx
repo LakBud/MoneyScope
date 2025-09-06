@@ -37,15 +37,15 @@ const Charts = ({ transactions }: ChartsProps) => {
   const [selectedChart, setSelectedChart] = useState<ChartSelection>("line");
 
   // ---------- Aggregations ----------
-  const categoryTotals: Record<string, { value: number }> = {};
-  const budgetTotals: Record<string, { value: number }> = {};
+  const categoryTotals: Record<string, { value: number; color: string }> = {};
+  const budgetTotals: Record<string, { value: number; color: string }> = {};
 
   transactions.forEach((t) => {
-    if (!categoryTotals[t.category]) categoryTotals[t.category] = { value: 0 };
+    if (!categoryTotals[t.category]) categoryTotals[t.category] = { value: 0, color: t.color };
     categoryTotals[t.category].value += t.value;
 
     if (t.budget) {
-      if (!budgetTotals[t.budget]) budgetTotals[t.budget] = { value: 0 };
+      if (!budgetTotals[t.budget]) budgetTotals[t.budget] = { value: 0, color: t.color };
       budgetTotals[t.budget].value += t.value;
     }
   });
@@ -69,17 +69,6 @@ const Charts = ({ transactions }: ChartsProps) => {
   const labelsCategory = Object.keys(categoryTotals);
   const labelsBudget = Object.keys(budgetTotals);
 
-  // ---------- Modern Palette ----------
-  const modernPalette = ["#6366F1", "#EC4899", "#F59E0B", "#10B981", "#F43F5E", "#3B82F6", "#8B5CF6", "#F97316"];
-
-  // ---------- Gradient Helpers ----------
-  const createGradient = (ctx: CanvasRenderingContext2D, chartArea: any, color: string) => {
-    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(0, `${color}20`);
-    gradient.addColorStop(1, `${color}80`);
-    return gradient;
-  };
-
   // ---------- Chart Data ----------
   const lineData: ChartData<"line", number[], string> = {
     labels: labelsLine,
@@ -87,8 +76,8 @@ const Charts = ({ transactions }: ChartsProps) => {
       {
         label: "Cumulative Balance",
         data: cumulativeValues,
-        borderColor: "#6366F1",
-        backgroundColor: (ctx) => createGradient(ctx.chart.ctx, ctx.chart.chartArea, "#6366F1"),
+        borderColor: "#4F46E5",
+        backgroundColor: "#A5B4FC40",
         tension: 0.3,
         fill: true,
         pointRadius: 6,
@@ -109,7 +98,7 @@ const Charts = ({ transactions }: ChartsProps) => {
         label: "Rolling Average",
         data: rollingAvg,
         borderColor: "#F59E0B",
-        backgroundColor: (ctx) => createGradient(ctx.chart.ctx, ctx.chart.chartArea, "#F59E0B"),
+        backgroundColor: "#FCD34D40",
         tension: 0.3,
         fill: true,
         borderDash: [5, 5],
@@ -126,8 +115,8 @@ const Charts = ({ transactions }: ChartsProps) => {
       {
         label: "Category Total",
         data: labelsCategory.map((c) => categoryTotals[c].value),
-        backgroundColor: labelsCategory.map((_, i) => modernPalette[i % modernPalette.length]),
-        borderRadius: 12,
+        backgroundColor: labelsCategory.map((c) => categoryTotals[c].color),
+        borderRadius: 8,
         maxBarThickness: 50,
       },
     ],
@@ -138,10 +127,10 @@ const Charts = ({ transactions }: ChartsProps) => {
     datasets: [
       {
         data: labelsCategory.map((c) => categoryTotals[c].value),
-        backgroundColor: labelsCategory.map((_, i) => `hsl(${i * 45}, 70%, 60%)`),
-        hoverOffset: 25,
+        backgroundColor: labelsCategory.map((c) => categoryTotals[c].color),
+        hoverOffset: 20,
         hoverBorderColor: "#fff",
-        hoverBorderWidth: 4,
+        hoverBorderWidth: 3,
       },
     ],
   };
@@ -154,9 +143,9 @@ const Charts = ({ transactions }: ChartsProps) => {
       {
         data: [totalIncome, totalExpense],
         backgroundColor: ["#10B981", "#EF4444"],
-        hoverOffset: 25,
+        hoverOffset: 20,
         hoverBorderColor: "#fff",
-        hoverBorderWidth: 4,
+        hoverBorderWidth: 3,
       },
     ],
   };
@@ -168,7 +157,7 @@ const Charts = ({ transactions }: ChartsProps) => {
         label: "Top 5 Transactions",
         data: top5Tx.map((t) => t.value),
         backgroundColor: top5Tx.map((t) => (t.value >= 0 ? "#10B981" : "#EF4444")),
-        borderRadius: 12,
+        borderRadius: 6,
         maxBarThickness: 50,
       },
     ],
@@ -180,27 +169,24 @@ const Charts = ({ transactions }: ChartsProps) => {
       {
         label: "Budget Totals",
         data: labelsBudget.map((b) => budgetTotals[b].value),
-        backgroundColor: labelsBudget.map((_, i) => modernPalette[i % modernPalette.length]),
-        borderRadius: 12,
+        backgroundColor: labelsBudget.map((b) => budgetTotals[b].color),
+        borderRadius: 8,
         maxBarThickness: 50,
       },
     ],
   };
 
-  // ---------- Modern Options ----------
-  const modernOptions: ChartOptions<any> = {
+  // ---------- Chart Options ----------
+  const optionsLineBar: ChartOptions<"line" | "bar"> = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 800, easing: "easeOutQuart" },
-    plugins: {
-      legend: { position: "bottom", labels: { boxWidth: 20, padding: 15, font: { size: 14 } } },
-      tooltip: { mode: "index", intersect: false, padding: 10 },
-    },
-    interaction: { mode: "nearest", axis: "x", intersect: false },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: "#e5e7eb", borderDash: [4, 4] } },
-    },
+    plugins: { legend: { position: "bottom" } },
+  };
+
+  const optionsPieDoughnut: ChartOptions<"pie" | "doughnut"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: "bottom" } },
   };
 
   useEffect(() => {
@@ -239,14 +225,16 @@ const Charts = ({ transactions }: ChartsProps) => {
 
       {/* Chart display */}
       <div className="flex-1 min-h-[18rem] md:min-h-[24rem] lg:min-h-[28rem] w-full">
-        {selectedChart === "line" && <Line ref={chartRef as any} data={lineData} options={modernOptions} />}
-        {selectedChart === "rollingAverage" && <Line ref={chartRef as any} data={rollingAverageData} options={modernOptions} />}
-        {selectedChart === "bar" && <Bar ref={chartRef as any} data={barData} options={modernOptions} />}
-        {selectedChart === "pie" && <Pie ref={chartRef as any} data={pieData} options={modernOptions} />}
-        {selectedChart === "doughnut" && <Doughnut ref={chartRef as any} data={doughnutData} options={modernOptions} />}
-        {selectedChart === "incomeExpense" && <Doughnut ref={chartRef as any} data={incomeExpenseData} options={modernOptions} />}
-        {selectedChart === "top5" && <Bar ref={chartRef as any} data={top5Data} options={modernOptions} />}
-        {selectedChart === "budgetTotals" && <Bar ref={chartRef as any} data={budgetBarData} options={modernOptions} />}
+        {selectedChart === "line" && <Line ref={chartRef as any} data={lineData} options={optionsLineBar} />}
+        {selectedChart === "rollingAverage" && <Line ref={chartRef as any} data={rollingAverageData} options={optionsLineBar} />}
+        {selectedChart === "bar" && <Bar ref={chartRef as any} data={barData} options={optionsLineBar} />}
+        {selectedChart === "pie" && <Pie ref={chartRef as any} data={pieData} options={optionsPieDoughnut} />}
+        {selectedChart === "doughnut" && <Doughnut ref={chartRef as any} data={doughnutData} options={optionsPieDoughnut} />}
+        {selectedChart === "incomeExpense" && (
+          <Doughnut ref={chartRef as any} data={incomeExpenseData} options={optionsPieDoughnut} />
+        )}
+        {selectedChart === "top5" && <Bar ref={chartRef as any} data={top5Data} options={optionsLineBar} />}
+        {selectedChart === "budgetTotals" && <Bar ref={chartRef as any} data={budgetBarData} options={optionsLineBar} />}
       </div>
     </div>
   );
