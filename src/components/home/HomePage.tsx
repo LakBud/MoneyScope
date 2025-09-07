@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiCreditCard } from "react-icons/fi";
 import { motion } from "framer-motion";
+import ModernChartsBg from "../AnimatedChartBg";
 
 const HomePage = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-50 via-blue-50 to-blue-100 px-4 sm:px-6 lg:px-10 overflow-hidden">
+      <ModernChartsBg />
       {/* Header */}
       <motion.header
         className="mb-12 text-center relative z-10"
