@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiSearch, FiTag, FiDollarSign } from "react-icons/fi";
-import type { TransactionProps } from "../../types/types";
+import { type Transaction } from "../../hooks/UseTransactions";
 
 interface FiltersProps {
-  transactions: (TransactionProps & { budget?: string; recurrence?: string })[];
-  setFilteredTransactions: React.Dispatch<React.SetStateAction<(TransactionProps & { budget?: string; recurrence?: string })[]>>;
+  transactions: Transaction[];
+  setFilteredTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   isOpen: boolean;
   onClose?: () => void;
 }
@@ -32,15 +32,10 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
     let filtered = [...transactions];
 
     if (search.trim() !== "") filtered = filtered.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()));
-
     if (category !== "all") filtered = filtered.filter((t) => t.category === category);
-
     if (budget !== "all") filtered = filtered.filter((t) => (t.budget ?? "") === budget);
-
     if (recurrence !== "all") filtered = filtered.filter((t) => (t.recurrence ?? "") === recurrence);
-
     if (minValue !== "") filtered = filtered.filter((t) => t.value >= minValue);
-
     if (maxValue !== "") filtered = filtered.filter((t) => t.value <= maxValue);
 
     setFilteredTransactions(filtered);
@@ -63,7 +58,7 @@ const TransactionListFilters = ({ transactions, setFilteredTransactions, isOpen 
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl flex flex-col gap-6 w-full z-50 relative border border-indigo-100"
+          className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl flex flex-col gap-6 w-full z-5 relative border border-indigo-100"
         >
           {/* Search + Filters Row */}
           <div className="flex flex-col md:flex-row gap-4">

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useTransactions } from "../hooks/UseTransactions";
+import { useTransactions, type Transaction } from "../hooks/UseTransactions";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiTrash2, FiArrowLeft, FiEdit2, FiCreditCard } from "react-icons/fi";
 import { useState } from "react";
@@ -38,10 +38,9 @@ const TransactionDetailPage = () => {
   };
 
   // Save edited transaction
-  const handleSave = (updatedTransaction: typeof transaction) => {
+  const handleSave = (updatedTransaction: Transaction) => {
     setTransactions(transactions.map((t) => (t.id === transaction.id ? updatedTransaction : t)));
 
-    // Redirect if ID changed
     if (updatedTransaction.id !== transaction.id) {
       navigate(`/transactions/${updatedTransaction.id}`);
     }
@@ -52,7 +51,7 @@ const TransactionDetailPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-50 via-blue-50 to-blue-100">
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center p-4 sm:p-6">
+      <main className="flex-1 z-2 flex flex-col items-center p-4 sm:p-6">
         <button
           onClick={() => navigate(-1)}
           className="self-start flex items-center text-indigo-600 font-medium underline mb-6 hover:text-indigo-800 transition-colors gap-2"

@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { motion, type Variants } from "framer-motion";
 import type { TransactionProps } from "../types/types";
+import type { Transaction } from "../hooks/UseTransactions";
 
 type TransactionFormData = TransactionProps & {
   recurrence?: "daily" | "weekly" | "monthly" | "yearly";
@@ -9,7 +10,7 @@ type TransactionFormData = TransactionProps & {
 
 type TransactionFormProps = {
   onClose: () => void;
-  onSave: (transaction: TransactionFormData) => void;
+  onSave: (transaction: Transaction) => void;
   defaultValues?: TransactionFormData;
 };
 
@@ -38,6 +39,7 @@ const TransactionForm = ({ onClose, onSave, defaultValues }: TransactionFormProp
       ...data,
       id: defaultValues?.id ?? crypto.randomUUID(),
       date: defaultValues?.date ?? new Date().toISOString(),
+      spent: data.spent ?? 0, // ✅ guarantee a number
     });
     reset();
     onClose();

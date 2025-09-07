@@ -4,13 +4,16 @@ import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { TransactionsProvider } from "./components/hooks/UseTransactions.tsx";
+import { BudgetsProvider } from "./components/hooks/UseBudgets.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TransactionsProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <BudgetsProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </BudgetsProvider>
     </TransactionsProvider>
   </StrictMode>
 );

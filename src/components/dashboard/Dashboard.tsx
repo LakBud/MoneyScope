@@ -19,6 +19,8 @@ import TransactionListFilters from "./list/TransactionListFilters";
 import { useTransactions } from "../hooks/UseTransactions";
 import { nanoid } from "nanoid";
 
+// Example: in your parent component
+
 const Dashboard = () => {
   const { transactions, setTransactions } = useTransactions(); // global context
   const [filteredTransactions, setFilteredTransactions] = useState(transactions);
