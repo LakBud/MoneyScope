@@ -33,6 +33,10 @@ const TransactionDetailPage = () => {
 
   // Delete transaction
   const handleDelete = () => {
+    const confirmed = window.confirm("Are you sure you want to delete this transaction? This action cannot be undone.");
+
+    if (!confirmed) return; // stop if user cancels
+
     setTransactions(transactions.filter((t) => t.id !== id));
     navigate("/dashboard");
   };
