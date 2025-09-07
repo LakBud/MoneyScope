@@ -28,37 +28,28 @@ type ChartSelection =
   | "bar"
   | "pie"
   | "doughnut"
+  | "txPie"
+  | "txDoughnut"
   | "incomeExpense"
   | "top5"
-  | "budgetTotals"
   | "forecast";
 
-const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
+const Charts = ({ transactions = [] }: ChartsProps) => {
   const chartRef = useRef<ChartJS | null>(null);
   const [selectedChart, setSelectedChart] = useState<ChartSelection>("line");
 
   // ---------- Aggregations ----------
   const categoryTotals: Record<string, { value: number; color: string }> = {};
-  const budgetTotals: Record<string, { spent: number; remaining: number; color: string }> = {};
-
-  budgets.forEach((b) => {
-    budgetTotals[b.name] = { spent: 0, remaining: b.limit, color: b.color || "#4F46E5" };
-  });
 
   transactions.forEach((t) => {
     if (t.category) {
       if (!categoryTotals[t.category]) categoryTotals[t.category] = { value: 0, color: t.color || "#4F46E5" };
       categoryTotals[t.category].value += t.value;
     }
-    if (t.budget && budgetTotals[t.budget]) {
-      budgetTotals[t.budget].spent += t.value;
-      budgetTotals[t.budget].remaining = Math.max(budgetTotals[t.budget].remaining - t.value, 0);
-    }
   });
 
   const labelsLine = transactions.map((t, i) => t.title || `Tx ${i + 1}`);
   const labelsCategory = Object.keys(categoryTotals);
-  const labelsBudget = Object.keys(budgetTotals);
 
   // ---------- Values ----------
   const cumulativeValues = transactions.reduce<number[]>((acc, t, i) => {
@@ -147,6 +138,21 @@ const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
 
   const doughnutData: ChartData<"doughnut", number[], string> = pieData as unknown as ChartData<"doughnut", number[], string>;
 
+  const txPieData: ChartData<"pie", number[], string> = {
+    labels: transactions.map((t, i) => t.title || `Tx ${i + 1}`),
+    datasets: [
+      {
+        data: transactions.map((t) => Math.abs(t.value)),
+        backgroundColor: transactions.map((t, i) => t.color || `hsl(${(i * 50) % 360}, 70%, 60%)`),
+        hoverOffset: 20,
+        hoverBorderColor: "#fff",
+        hoverBorderWidth: 3,
+      },
+    ],
+  };
+
+  const txDoughnutData: ChartData<"doughnut", number[], string> = txPieData as unknown as ChartData<"doughnut", number[], string>;
+
   const incomeExpenseData: ChartData<"doughnut", number[], string> = {
     labels: ["Income", "Expenses"],
     datasets: [
@@ -173,26 +179,6 @@ const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
     ],
   };
 
-  const budgetBarData: ChartData<"bar", number[], string> = {
-    labels: labelsBudget,
-    datasets: [
-      {
-        label: "Spent",
-        data: labelsBudget.map((b) => budgetTotals[b].spent),
-        backgroundColor: labelsBudget.map((b) => budgetTotals[b].color),
-        borderRadius: 8,
-        maxBarThickness: 50,
-      },
-      {
-        label: "Remaining",
-        data: labelsBudget.map((b) => budgetTotals[b].remaining),
-        backgroundColor: labelsBudget.map(() => "#E5E7EB"),
-        borderRadius: 8,
-        maxBarThickness: 50,
-      },
-    ],
-  };
-
   const forecastData: ChartData<"line", number[], string> = {
     labels: [...labelsLine, ...forecastLabels],
     datasets: [
@@ -208,7 +194,6 @@ const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
         borderWidth: 3,
         segment: {
           borderDash: (ctx: any) => {
-            // Use p1DataIndex to check the data index
             return ctx.p1DataIndex >= cumulativeValues.length ? [5, 5] : [];
           },
         },
@@ -237,24 +222,26 @@ const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
   return (
     <div className="w-full h-full bg-white/30 backdrop-blur-xl rounded-3xl shadow-lg p-4 md:p-6 flex flex-col gap-4 border border-white/20">
       {/* Chart type buttons */}
-      <div className="flex flex-wrap justify-end gap-2 md:gap-3 mb-3">
+      <div className="flex overflow-x-auto gap-2 md:gap-3 mb-3 pb-2">
         {[
           { key: "line", label: "Balance" },
           { key: "rollingAverage", label: "Rolling Average" },
           { key: "bar", label: "Category Total" },
-          { key: "pie", label: "Category Share" },
+          { key: "pie", label: "Category Pie" },
           { key: "doughnut", label: "Category Doughnut" },
+          { key: "txPie", label: "TX Pie" },
+          { key: "txDoughnut", label: "TX Doughnut" },
           { key: "incomeExpense", label: "Income vs Expense" },
-          { key: "top5", label: "Top 5" },
+          { key: "top5", label: "TX Top 5" },
           { key: "forecast", label: "Forecast" },
         ].map((chart) => (
           <button
             key={chart.key}
             onClick={() => setSelectedChart(chart.key as ChartSelection)}
-            className={`flex items-center gap-1 px-3 md:px-4 py-1.5 md:py-2 rounded-2xl font-semibold transition-all duration-300 ${
+            className={`flex-shrink-0 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl font-semibold transition-all duration-300 ${
               selectedChart === chart.key
-                ? "bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 text-white shadow-lg"
-                : "bg-white/40 text-blue-700 hover:bg-gradient-to-r hover:from-blue-400 hover:to-indigo-400 hover:text-white shadow-sm"
+                ? "bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 text-white shadow-md"
+                : "bg-white/50 text-blue-700 hover:bg-gradient-to-r hover:from-blue-400 hover:to-indigo-400 hover:text-white shadow-sm"
             }`}
           >
             {chart.label}
@@ -269,13 +256,12 @@ const Charts = ({ transactions = [], budgets = [] }: ChartsProps) => {
         {selectedChart === "bar" && <Bar ref={chartRef as any} data={barData} options={optionsLineBar} />}
         {selectedChart === "pie" && <Pie ref={chartRef as any} data={pieData} options={optionsPieDoughnut} />}
         {selectedChart === "doughnut" && <Doughnut ref={chartRef as any} data={doughnutData} options={optionsPieDoughnut} />}
+        {selectedChart === "txPie" && <Pie ref={chartRef as any} data={txPieData} options={optionsPieDoughnut} />}
+        {selectedChart === "txDoughnut" && <Doughnut ref={chartRef as any} data={txDoughnutData} options={optionsPieDoughnut} />}
         {selectedChart === "incomeExpense" && (
           <Doughnut ref={chartRef as any} data={incomeExpenseData} options={optionsPieDoughnut} />
         )}
         {selectedChart === "top5" && <Bar ref={chartRef as any} data={top5Data} options={optionsLineBar} />}
-        {selectedChart === "budgetTotals" && labelsBudget.length > 0 && (
-          <Bar ref={chartRef as any} data={budgetBarData} options={optionsLineBar} />
-        )}
         {selectedChart === "forecast" && <Line ref={chartRef as any} data={forecastData} options={optionsLineBar} />}
       </div>
     </div>
