@@ -123,7 +123,7 @@ export default function ModernChartsBg() {
   };
 
   return (
-    <div className="absolute inset-0 z-1 pointer-events-none opacity-30">
+    <div className="fixed inset-0 z-1 pointer-events-none opacity-30">
       {/* Bar chart background */}
       <Bar data={barData} options={barOptions} className="absolute inset-0" />
 
