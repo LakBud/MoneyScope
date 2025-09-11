@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiCreditCard, FiTrendingUp, FiShield, FiPieChart, FiUsers } from "react-icons/fi";
 import { motion } from "framer-motion";
-import ModernChartsBg from "../AnimatedChartBg";
+import ModernChartsBg from "../../components/common/AnimatedChartBg";
 
 const features = [
   {

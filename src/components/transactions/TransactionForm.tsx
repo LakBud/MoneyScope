@@ -1,8 +1,8 @@
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { motion, type Variants } from "framer-motion";
-import type { TransactionProps } from "../types/types";
-import type { Transaction } from "../hooks/UseTransactions";
+import type { TransactionProps } from "../../types/types";
+import type { Transaction } from "../../hooks/UseTransactions";
 import { useEffect } from "react";
 
 type TransactionFormData = TransactionProps & {

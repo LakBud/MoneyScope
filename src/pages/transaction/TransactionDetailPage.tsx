@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useTransactions, type Transaction } from "../hooks/UseTransactions";
+import { useTransactions, type Transaction } from "../../hooks/UseTransactions";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiTrash2, FiArrowLeft, FiEdit2, FiCreditCard } from "react-icons/fi";
 import { useState } from "react";
-import TransactionForm from "./TransactionForm";
+import TransactionForm from "../../components/transactions/TransactionForm";
 
 const TransactionDetailPage = () => {
   const { id } = useParams<{ id: string }>();

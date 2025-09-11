@@ -1,9 +1,9 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useTransactions, type Transaction } from "../../hooks/UseTransactions";
+import { useTransactions, type Transaction } from "../../../hooks/UseTransactions";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiTrash2, FiArrowLeft, FiEdit2, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useState, useEffect } from "react";
-import BudgetForm from "./BudgetForm";
+import BudgetForm from "../../../components/budget/BudgetForm";
 
 interface Budget {
   id: string;

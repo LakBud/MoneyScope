@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import TransactionForm from "../transactions/TransactionForm";
-import TransactionList from "./list/TransactionList";
-import Charts from "./charts/Charts";
+import TransactionForm from "../../components/transactions/TransactionForm";
+import TransactionList from "../../components/transactions/TransactionList";
+import Charts from "../../components/charts/Charts";
 import {
   FiPieChart,
   FiBarChart,
@@ -14,10 +14,11 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import TransactionListFilters from "./list/TransactionListFilters";
+import TransactionListFilters from "../../components/transactions/TransactionListFilters";
 
-import { useTransactions } from "../hooks/UseTransactions";
+import { useTransactions } from "../../hooks/UseTransactions";
 import { nanoid } from "nanoid";
+import ModernChartsBg from "../../components/common/AnimatedChartBg";
 
 // Example: in your parent component
 
@@ -59,6 +60,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-blue-50 to-blue-100 flex flex-col">
+      <ModernChartsBg />
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-10 py-6 md:py-8 flex flex-col lg:flex-row gap-6 md:gap-8 z-2">
         {/* Left Column */}
         <div className="flex-1 flex flex-col gap-6">

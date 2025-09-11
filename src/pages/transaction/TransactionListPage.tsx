@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlus, FiFilter, FiEdit, FiBarChart, FiInfo, FiMinus } from "react-icons/fi";
-import TransactionForm from "./TransactionForm";
-import TransactionList from "../dashboard/list/TransactionList";
-import TransactionListFilters from "../dashboard/list/TransactionListFilters";
-import { useTransactions, type Transaction } from "../hooks/UseTransactions";
-import BudgetList from "./budget/BudgetList";
+import TransactionForm from "../../components/transactions/TransactionForm";
+import TransactionList from "../../components/transactions/TransactionList";
+import TransactionListFilters from "../../components/transactions/TransactionListFilters";
+import { useTransactions, type Transaction } from "../../hooks/UseTransactions";
+import BudgetList from "../../components/budget/BudgetList";
 
 const TransactionListPage = () => {
   const { transactions, setTransactions } = useTransactions();
