@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "../pages/dashboard/Dashboard";
+import Dashboard from "../pages/Dashboard";
 import TransactionDetailPage from "../pages/transaction/TransactionDetailPage";
-import HomePage from "../pages/home/HomePage";
+import HomePage from "../pages/HomePage";
 import TransactionListPage from "../pages/transaction/TransactionListPage";
 import BudgetDetailPage from "../pages/transaction/budget/BudgetDetailPage";
 

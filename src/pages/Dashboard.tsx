@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import TransactionForm from "../../components/transactions/TransactionForm";
-import TransactionList from "../../components/transactions/TransactionList";
-import Charts from "../../components/charts/Charts";
+import TransactionForm from "../components/transactions/TransactionForm";
+import TransactionList from "../components/transactions/TransactionList";
+import Charts from "../components/charts/Charts";
 import {
   FiPieChart,
   FiBarChart,
@@ -14,11 +14,11 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import TransactionListFilters from "../../components/transactions/TransactionListFilters";
+import TransactionListFilters from "../components/transactions/TransactionListFilters";
 
-import { useTransactions } from "../../hooks/UseTransactions";
+import { useTransactions } from "../hooks/UseTransactions";
 import { nanoid } from "nanoid";
-import ModernChartsBg from "../../components/common/AnimatedChartBg";
+import ModernChartsBg from "../components/common/AnimatedChartBg";
 
 // Example: in your parent component
 
